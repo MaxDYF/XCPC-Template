@@ -7,7 +7,7 @@ typedef pair<int, int> pii;
 typedef pair<ll, ll> pll;
 typedef pair<db, db> pdd;
 typedef pair<ll, int> pli;
-namespace Segment
+namespace SegmentAdd
 {
 	typedef long long type;
 	struct Node
