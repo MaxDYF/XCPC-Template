@@ -1,22 +1,20 @@
-
+#include <cstdint>
+/*
+ * 线段树模板
+ * 默认为区间加法
+ */
 const int N = 2e5 + 10;
-#define lowbit(x) (x&-x)
-typedef long long ll;
-typedef double db;
-typedef pair<int, int> pii;
-typedef pair<ll, ll> pll;
-typedef pair<db, db> pdd;
-typedef pair<ll, int> pli;
 namespace SegmentAdd
 {
-	typedef long long type;
+	// 声明维护值的类型，默认为int64_t
+	typedef int64_t T;
 	struct Node
 	{
-		type val, lazy;
+		T val, lazy;
 		int l, r;
 	};
 	Node tr[N << 2];
-	type a[N];
+	T a[N];
 	void updata(int p)
 	{
 		tr[p].val = tr[p << 1].val + tr[p << 1 | 1].val;
@@ -39,18 +37,18 @@ namespace SegmentAdd
 	{
 		if (tr[p].lazy)
 		{
-			type t = tr[p].lazy;
+			T t = tr[p].lazy;
 			tr[p << 1].val += t * (tr[p << 1].r - tr[p << 1].l + 1), tr[p << 1].lazy += t;
 			tr[p << 1 | 1].val += t * (tr[p << 1 | 1].r - tr[p << 1 | 1].l + 1), tr[p << 1 | 1].lazy += t;
 			tr[p].lazy = 0;
 		}
 	}
-	type query(int l, int r, int p = 1)
+	T query(int l, int r, int p = 1)
 	{
 		if (l <= tr[p].l && tr[p].r <= r)
 			return tr[p].val;
 		int mid = (tr[p].l + tr[p].r) >> 1;
-		type sum = 0;
+		T sum = 0;
 		spread(p);
 		if (l <= mid)
 			sum += query(l, r, p << 1);
