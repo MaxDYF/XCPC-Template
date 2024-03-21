@@ -1,50 +1,46 @@
-//#pragma GCC optimize(2)
+
 #include <bits/stdc++.h>
-using namespace std;
 
-const int N = 2e5 + 10;
-const int inf = 1 << 30;
-const long long llinf = 1ll << 60;
-const double PI = acos(-1);
-
-typedef long long ll;
-typedef double db;
-typedef pair<int, int> pii;
-typedef pair<ll, ll> pll;
-typedef pair<db, db> pdd;
-
-
-template<class T, T MOD = 0>
+/*
+ * 矩阵类
+ * 实现了矩阵加法、减法、乘法以及取模
+ * 当MOD=0时相当于不取模
+ */
+template <class T, T MOD = 0>
 class Matrix
 {
 private:
+	int32_t R, C;
+	std::vector<std::vector<T>> a;
 
-	int R, C;
-	vector<vector<T> > a;
 public:
-	Matrix(){}
+	Matrix() {}
+	/*
+	 * 需要在初始化时传入其行数Rt与列数Ct
+	 * 可选参数为矩阵初始初始值init_val
+	 */
 	Matrix(const int Rt, const int Ct, T init_val = 0)
 	{
-		a = vector<vector<T> >(Rt, vector<T>(Ct, init_val));
+		a = std::vector<std::vector<T>>(Rt, std::vector<T>(Ct, init_val));
 		R = Rt;
 		C = Ct;
 	}
-	Matrix(vector<vector<T> > b)
+	Matrix(std::vector<std::vector<T>> b)
 	{
 		a = b;
 		R = a.size();
 		C = a[0].size();
 	}
-	Matrix<T, MOD> operator * (const Matrix<T, MOD> b)
+	Matrix<T, MOD> operator*(const Matrix<T, MOD> b)
 	{
 		try
 		{
 			if (C != b.R)
 				throw "SIZE DIFF";
 		}
-		catch(string code)
+		catch (std::string code)
 		{
-			cout << "MATRIX ERROR @ OPERATOR * : " + code << endl;
+			std::cerr << "MATRIX ERROR @ OPERATOR * : " + code << std::endl;
 			exit(0);
 		}
 		Matrix<T, MOD> c(R, b.C, 0);
@@ -59,16 +55,16 @@ public:
 				}
 		return c;
 	}
-	Matrix<T, MOD> operator + (const Matrix<T, MOD> b)
+	Matrix<T, MOD> operator+(const Matrix<T, MOD> b)
 	{
 		try
 		{
 			if (R != b.R || C != b.C)
 				throw "SIZE DIFF";
 		}
-		catch(string code)
+		catch (std::string code)
 		{
-			cout << "MATRIX ERROR @ OPERATOR + : " + code << endl;
+			std::cerr << "MATRIX ERROR @ OPERATOR + : " + code << std::endl;
 			exit(0);
 		}
 		Matrix<T, MOD> c(R, C, 0);
@@ -78,10 +74,10 @@ public:
 					c.a[i][j] = (a[i][j] + b.a[i][j]) % MOD;
 				else
 					c.a[i][j] = (a[i][j] + b.a[i][j]);
-				
+
 		return c;
 	}
-	Matrix<T, MOD> operator * (const T val)
+	Matrix<T, MOD> operator*(const T val)
 	{
 		Matrix<T, MOD> c(a);
 		for (int i = 0; i < R; i++)
@@ -92,7 +88,7 @@ public:
 					c.a[i][j] = (c.a[i][j] * val);
 		return c;
 	}
-	Matrix<T, MOD> operator % (const T val)
+	Matrix<T, MOD> operator%(const T val)
 	{
 		Matrix<T, MOD> c(a);
 		for (int i = 0; i < R; i++)
@@ -112,11 +108,27 @@ public:
 	{
 		for (int i = 0; i < R; i++)
 			for (int j = 0; j < C; j++)
-				cout << a[i][j] << " \n"[j == C - 1];
+				std::cout << a[i][j] << " \n"[j == C - 1];
 	}
 };
+// 模板结束
+
+using namespace std;
+const int N = 2e5 + 10;
+const int inf = 1 << 30;
+const long long llinf = 1ll << 60;
+const double PI = acos(-1);
+
+#define lowbit(x) (x & -x)
+typedef long long ll;
+typedef double db;
+typedef pair<int, int> pii;
+typedef pair<ll, ll> pll;
+typedef pair<db, db> pdd;
+typedef pair<ll, int> pli;
+
 const ll mod = 1e9 + 7;
-template<typename T>
+template <typename T>
 T quickPow(T base, ll times, T initVal = 1)
 {
 	T ans = initVal;
@@ -126,7 +138,6 @@ T quickPow(T base, ll times, T initVal = 1)
 			ans = ans * base % mod;
 		base = base * base % mod;
 		times >>= 1;
-		
 	}
 	return ans;
 }
@@ -134,7 +145,7 @@ void work()
 {
 	ll n, k;
 	cin >> n >> k;
-	vector<vector<ll> > a(n, vector<ll>(n));
+	vector<vector<ll>> a(n, vector<ll>(n));
 	for (int i = 0; i < n; i++)
 		for (int j = 0; j < n; j++)
 			cin >> a[i][j];
