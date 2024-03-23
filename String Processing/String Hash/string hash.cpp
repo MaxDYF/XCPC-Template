@@ -28,7 +28,7 @@ namespace stringHash
 
 	void preProcess()
 	{
-		hashPow[0] = std::make_pair(1LL, 1LL);
+		hashPow[0] = {1LL, 1LL};
 		for (int i = 1; i < N; i++)
 		{
 			hashPow[i].first = hashPow[i - 1].first * (CHAR_SIZE + 1LL) % mod1;
