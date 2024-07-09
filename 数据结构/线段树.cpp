@@ -2,24 +2,22 @@
 /*
  * 线段树模板
  * 默认为区间加法
+ * 注意：默认下标从0开始，范围[0, n)
  */
-const int N = 2e5 + 10;
-namespace SegmentAdd
+template <class T>
+struct SegmentTree
 {
-	// 声明维护值的类型，默认为int64_t
-	typedef int64_t T;
 	struct Node
 	{
 		T val, lazy;
 		int l, r;
 	};
-	Node tr[N << 2];
-	T a[N];
+	vector<Node> tr;
 	void updata(int p)
 	{
 		tr[p].val = tr[p << 1].val + tr[p << 1 | 1].val;
 	}
-	void build(int l, int r, int p = 1)
+	void build(int l, int r, vector<T> &a, int p = 1)
 	{
 		if (l == r)
 		{
@@ -28,11 +26,25 @@ namespace SegmentAdd
 			return;
 		}
 		int mid = (l + r) >> 1;
-		build(l, mid, p << 1);
-		build(mid + 1, r, p << 1 | 1);
+		build(l, mid, a, p << 1);
+		build(mid + 1, r, a, p << 1 | 1);
 		tr[p].l = l, tr[p].r = r;
 		updata(p);
 	}
+	SegmentTree(int n)
+	{
+		tr.clear();
+		tr.resize(n * 4);
+		build(0, n - 1, vector<T>(n));
+	}
+	SegmentTree(vector<T> &a)
+	{
+		int n = a.size();
+		tr.clear();
+		tr.resize(n * 4);
+		build(0, n - 1, a);
+	}
+
 	void spread(int p)
 	{
 		if (tr[p].lazy)
@@ -72,4 +84,4 @@ namespace SegmentAdd
 			add(l, r, val, p << 1 | 1);
 		updata(p);
 	}
-}
+};
