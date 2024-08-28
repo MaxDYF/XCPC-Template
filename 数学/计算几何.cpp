@@ -69,6 +69,10 @@ struct Line
 };
 namespace Geometry
 {
+    Point rotate(Point p, Point base, design_float angle)
+    {
+        return (p - base).rotate(angle) + base;
+    }
     Point intersection(Line l1, Line l2)
     {
         design_float s1 = (l2.b - l2.a) ^ (l1.a - l2.a);
