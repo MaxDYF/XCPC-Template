@@ -69,6 +69,8 @@ public:
 	 */
 	HashPair subHash(int l, int r)
 	{
+		if (l >= r)
+			return {0, 0};
 		if (l == 0)
 			return hashVal[r - 1];
 		else
