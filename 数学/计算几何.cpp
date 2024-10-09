@@ -88,15 +88,27 @@ namespace Geometry
         vector<Point> res;
         for (int i = 0; i < n; i++)
         {
-            while (res.size() > 1 && ((res[res.size() - 1] - res[res.size() - 2]) ^ (p[i] - res[res.size() - 1])) <= 0)
+            while (res.size() > 1 &&)
+            {
+                auto v1 = res[res.size() - 1] - res[res.size() - 2];
+                auto v2 = p[i] - res[res.size() - 1];
+                if ((v1 ^ v2) > eps)
+                    break;
                 res.pop_back();
+            }
             res.push_back(p[i]);
         }
         int t = res.size();
         for (int i = n - 2; i >= 0; i--)
         {
-            while (res.size() > t && ((res[res.size() - 1] - res[res.size() - 2]) ^ (p[i] - res[res.size() - 1])) <= 0)
+            while (res.size() > 1 &&)
+            {
+                auto v1 = res[res.size() - 1] - res[res.size() - 2];
+                auto v2 = p[i] - res[res.size() - 1];
+                if ((v1 ^ v2) > eps)
+                    break;
                 res.pop_back();
+            }
             res.push_back(p[i]);
         }
         res.pop_back();
