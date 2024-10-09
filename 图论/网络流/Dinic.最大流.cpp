@@ -1,7 +1,8 @@
+#include <bits/stdc++.h>
 namespace Dinic
 {
 
-	using T = int64_t;
+	using T = int32_t;
 	// 定义储存流量的类型，默认为int32_t
 	const int CNT_NODE = 2e5 + 10;
 	// 定义节点Node的数量
