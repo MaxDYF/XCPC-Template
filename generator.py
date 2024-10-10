@@ -35,8 +35,12 @@ def create_latex_file(content):
 % 页眉和页脚
 \pagestyle{fancy}
 \fancyhf{}
-\rhead{\rightmark}  % 页眉显示当前小标题
-\lhead{XCPC 算法模板}
+\fancyhead[L]{XCPC算法模板} % 左侧页眉
+\fancyhead[R]{\leftmark} % 右侧页眉
+
+% 更新章节标题格式
+\renewcommand{\sectionmark}[1]{\markright{#1}} % 用于 section
+\renewcommand{\subsectionmark}[1]{\markboth{#1}{}} % 用于 subsection
 \cfoot{\thepage}
 
 % 封面设置
@@ -98,9 +102,10 @@ def generate_latex_content():
                         # 转义反斜杠和百分号等特殊字符
                         # cpp_content_escaped = cpp_content.replace('\\', r'\textbackslash{}').replace('%', r'\%')
                         cpp_content_escaped = cpp_content.replace('\\', r'\textbackslash{}')
-                        latex_content += "\lstset{basicstyle=\ttfamily}\n\\begin{Verbatim}[fontsize=\\small]\n"
+                        latex_content += "\\begin{Verbatim}[fontsize=\\small]\n"
                         latex_content += cpp_content_escaped
-                        latex_content += "\n\\end{Verbatim}\n\n"
+                        latex_content += "\n\\end{Verbatim}\n"
+                        latex_content += "\let\cleardoublepage\clearpage\n\n"
                 except Exception as e:
                     print(f"无法读取文件 {entry_path}: {e}")
 
