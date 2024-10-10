@@ -141,28 +141,3 @@ T quickPow(T base, ll times, T initVal = 1)
     }
     return ans;
 }
-void work()
-{
-    ll n, k;
-    cin >> n >> k;
-    vector<vector<ll>> a(n, vector<ll>(n));
-    for (int i = 0; i < n; i++)
-        for (int j = 0; j < n; j++)
-            cin >> a[i][j];
-    Matrix<ll, mod> bs(a);
-    if (k == 0)
-    {
-        for (int i = 1; i <= n; i++)
-            for (int j = 1; j <= n; j++)
-                cout << (int)(i == j) << " \n"[j == n];
-    }
-    else
-        quickPow(bs, k - 1, bs).print();
-}
-int main()
-{
-    ios::sync_with_stdio(0);
-    cin.tie(0);
-    cout.tie(0);
-    work();
-}

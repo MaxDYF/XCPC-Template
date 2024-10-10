@@ -1,5 +1,3 @@
-#include <bits/stdc++.h>
-using namespace std;
 typedef double design_float;
 const design_float PI = acos(-1);
 const design_float eps = 1e-7;
@@ -182,7 +180,4 @@ namespace Geometry
         }
         return ans;
     }
-}
-int main()
-{
 }

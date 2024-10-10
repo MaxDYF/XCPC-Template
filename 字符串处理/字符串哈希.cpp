@@ -1,5 +1,3 @@
-// #pragma GCC optimize(2)
-#include <bits/stdc++.h>
 typedef std::pair<int, int> HashPair;
 class Hash
 {

@@ -1,19 +1,3 @@
-// #pragma GCC optimize(2)
-#include <bits/stdc++.h>
-using namespace std;
-
-const int N = 2e5 + 10;
-const int inf = 1 << 30;
-const long long llinf = 1ll << 60;
-const double PI = acos(-1);
-
-#define lowbit(x) (x & -x)
-typedef long long ll;
-typedef double db;
-typedef pair<int, int> pii;
-typedef pair<ll, ll> pll;
-typedef pair<db, db> pdd;
-typedef pair<ll, int> pli;
 
 /*
  * AC自动机模板
@@ -140,30 +124,4 @@ namespace ACautomaton
     {
         return vis[rev[num]];
     }
-}
-
-int n, m, k, q;
-
-void work()
-{
-    cin >> n;
-    string s, t;
-    for (int i = 1; i <= n; i++)
-    {
-        cin >> s;
-        ACautomaton::insert(s, i);
-    }
-    cin >> t;
-    ACautomaton::getfail();
-    ACautomaton::query(t);
-    ACautomaton::topu();
-    for (int i = 1; i <= n; i++)
-        cout << ACautomaton::getAnswer(i) << '\n';
-}
-int main()
-{
-    ios::sync_with_stdio(0);
-    cin.tie(0);
-    cout.tie(0);
-    work();
 }
