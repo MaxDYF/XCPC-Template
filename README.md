@@ -1,3 +1,3 @@
 # XCPC Template
 
-My personal template bank for algorithm contest.
+MaxDYF的XCPC个人模板库以及自动生成XCPC竞赛纸质文稿的脚本
