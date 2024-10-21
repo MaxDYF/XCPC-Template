@@ -1,3 +1,4 @@
+#include <bits/stdc++.h>
 typedef double design_float;
 const design_float PI = acos(-1);
 const design_float eps = 1e-7;
@@ -8,6 +9,7 @@ struct Vector
         : x(x), y(y)
     {
     }
+    bool operator==(const Vector &b) const { return fabs(x - b.x) <= eps && fabs(y - b.y) <= eps; }
     Vector operator+(const Vector &b) const { return Vector(x + b.x, y + b.y); }
     Vector operator-(const Vector &b) const { return Vector(x - b.x, y - b.y); }
     Vector operator*(const design_float &b) const { return Vector(x * b, y * b); }
@@ -38,7 +40,7 @@ struct Line
     // 判断点c在线段上
     bool isPointOnSegment(Point c)
     {
-        return ((b - a) ^ (c - a)) == 0 && (c - a) * (c - b) <= 0;
+        return fabs((b - a) ^ (c - a)) <= eps && (c - a) * (c - b) <= eps;
     }
     // 求点c到直线的距离
     design_float distanceToLine(Point c)
@@ -78,42 +80,39 @@ namespace Geometry
         return (l1.a * s2 - l1.b * s1) / (s2 - s1);
     }
     // 输入一个点集，返回凸包
-    vector<Point> getHull(vector<Point> p)
+    std::vector<Point> getHull(std::vector<Point> p)
     {
-        int n = p.size();
-        sort(p.begin(), p.end(), [](Point a, Point b)
-             { return a.x == b.x ? a.y < b.y : a.x < b.x; });
-        vector<Point> res;
-        for (int i = 0; i < n; i++)
+        std::vector<Point> h, l;
+        std::sort(p.begin(), p.end(), [&](auto a, auto b)
+                  {
+        if (a.x != b.x) {
+            return a.x < b.x;
+        } else {
+            return a.y < b.y;
+        } });
+        p.erase(std::unique(p.begin(), p.end()), p.end());
+        if (p.size() <= 1)
         {
-            while (res.size() > 1 &&)
-            {
-                auto v1 = res[res.size() - 1] - res[res.size() - 2];
-                auto v2 = p[i] - res[res.size() - 1];
-                if ((v1 ^ v2) > eps)
-                    break;
-                res.pop_back();
-            }
-            res.push_back(p[i]);
+            return p;
         }
-        int t = res.size();
-        for (int i = n - 2; i >= 0; i--)
+
+        for (auto a : p)
         {
-            while (res.size() > 1 &&)
-            {
-                auto v1 = res[res.size() - 1] - res[res.size() - 2];
-                auto v2 = p[i] - res[res.size() - 1];
-                if ((v1 ^ v2) > eps)
-                    break;
-                res.pop_back();
-            }
-            res.push_back(p[i]);
+            while (h.size() > 1 && ((a - h.back()) ^ (a - h[h.size() - 2])) <= 0)
+                h.pop_back();
+            while (l.size() > 1 && ((a - l.back()) ^ (a - l[l.size() - 2])) >= 0)
+                l.pop_back();
+            l.push_back(a);
+            h.push_back(a);
         }
-        res.pop_back();
-        return res;
+        l.pop_back();
+        std::reverse(h.begin(), h.end());
+        h.pop_back();
+        l.insert(l.end(), h.begin(), h.end());
+        return l;
     }
     // 计算凸包的边长
-    design_float getHullLength(vector<Point> hull)
+    design_float getHullLength(std::vector<Point> hull)
     {
         design_float res = 0;
         for (int i = 0; i < hull.size(); i++)
@@ -121,7 +120,7 @@ namespace Geometry
         return res;
     }
     // 计算凸包的面积
-    design_float getHullArea(vector<Point> hull)
+    design_float getHullArea(std::vector<Point> hull)
     {
         design_float res = 0;
         for (int i = 0; i < hull.size(); i++)
@@ -133,27 +132,27 @@ namespace Geometry
         return ((l.b - l.a) ^ (p - l.a)) > eps;
     }
     // 求半平面交，给定若干条有向线段，算法将其排序后，以左边为半平面，返回交的凸包。
-    vector<Point> getHalfPlane(vector<Line> lines)
+    std::vector<Point> getHalfPlane(std::vector<Line> lines)
     {
         sort(lines.begin(), lines.end(), [](auto a, auto b)
              {
             design_float angle1 = a.vec().angle(), angle2 = b.vec().angle();
-            if (fabs(angle1 - angle2) < eps)
+            if (fabs(angle1 - angle2) <= eps)
                 return pointOnLeft(a.a, b);
             else
                 return angle1 < angle2; });
-        vector<Line> res;
+        std::vector<Line> res;
         for (auto x : lines)
         {
-            if (!res.empty() && fabs(x.vec().angle() - res.back().vec().angle()) < eps)
+            if (!res.empty() && fabs(x.vec().angle() - res.back().vec().angle()) <= eps)
                 continue;
             res.push_back(x);
         }
         lines.swap(res);
         int len = lines.size();
         int l = 1, r = 0;
-        vector<int> q(len * 2);
-        vector<Point> p(len * 2);
+        std::vector<int> q(len * 2);
+        std::vector<Point> p(len * 2);
         for (int i = 0; i < len; i++)
         {
             while (l < r && !pointOnLeft(p[r], lines[i]))
@@ -161,18 +160,18 @@ namespace Geometry
             while (l < r && !pointOnLeft(p[l + 1], lines[i]))
                 l++;
             q[++r] = i;
-            if (l < r && fabs((lines[q[r]].vec() ^ lines[q[r - 1]].vec())) < eps)
+            if (l < r && fabs((lines[q[r]].vec() ^ lines[q[r - 1]].vec())) <= eps)
                 if (lines[q[r]].vec() * lines[q[r - 1]].vec() < -eps)
-                    return vector<Point>();
+                    return std::vector<Point>();
             if (l < r)
                 p[r] = intersection(lines[q[r]], lines[q[r - 1]]);
         }
         while (l < r && !pointOnLeft(p[r], lines[q[l]]))
             r--;
         if (r - l <= 1)
-            return vector<Point>();
+            return std::vector<Point>();
         p[l] = intersection(lines[q[r]], lines[q[l]]);
-        vector<Point> ans;
+        std::vector<Point> ans;
         while (l <= r)
         {
             ans.push_back(p[l]);
