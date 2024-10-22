@@ -2,4 +2,5 @@
 *.exe
 *.tex
 tempCodeRunnerFile.*
-cpp.json
+*.json
+.cph
