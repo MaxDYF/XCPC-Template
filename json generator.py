@@ -18,7 +18,7 @@ def cpp_files_to_snippets():
                 snippet_content = ''.join(content)
 
                 # 转换为适合JSON格式的代码片段格式
-                snippet_lines = [line.replace('"', '\\"') for line in snippet_content.splitlines()]
+                snippet_lines = [line.replace('"', '\"') for line in snippet_content.splitlines()]
 
                 # 构造VS Code的代码片段JSON结构
                 snippets[snippet_name] = {
