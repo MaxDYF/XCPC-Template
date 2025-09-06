@@ -24,51 +24,43 @@ long long n, m, k, q, x;
  * 通过例题: https://www.luogu.com.cn/problem/P10320?contestId=156706
  */
 
-namespace Zfunc
-{
-    vector<int> getZ(string s)
-    {
-        int n = s.length();
-        vector<int> z(n);
-        int l = 0, r = 0;
-        for (int i = 0; i < n; i++)
-        {
-            // 如果不超出范围，则直接继承
-            if (i <= r && i + z[i - l] - 1 < r)
-                z[i] = z[i - l];
-            // 否则，就尝试从r-l+1长度开始暴力扩展
-            else
-            {
-                z[i] = max(0, r - i + 1);
-                while (i + z[i] < n && s[i + z[i]] == s[z[i]])
-                    ++z[i];
-            }
-            // 更新l, r的边界
-            if (i + z[i] - 1 > r)
-                l = i, r = i + z[i] - 1;
+namespace Zfunc {
+vector<int> getZ(string s) {
+    int n = s.length();
+    vector<int> z(n);
+    int l = 0, r = 0;
+    for (int i = 0; i < n; i++) {
+        // 如果不超出范围，则直接继承
+        if (i <= r && i + z[i - l] - 1 < r)
+            z[i] = z[i - l];
+        // 否则，就尝试从r-l+1长度开始暴力扩展
+        else {
+            z[i] = max(0, r - i + 1);
+            while (i + z[i] < n && s[i + z[i]] == s[z[i]])
+                ++z[i];
         }
-        return z;
+        // 更新l, r的边界
+        if (i + z[i] - 1 > r)
+            l = i, r = i + z[i] - 1;
     }
+    return z;
 }
-void work()
-{
+} // namespace Zfunc
+void work() {
     string a, b;
     cin >> a >> b;
     int n = a.length(), m = b.length();
     string c = b + '*' + a;
-    auto z1 = Zfunc::getZ(b),
-         z2 = Zfunc::getZ(c);
+    auto z1 = Zfunc::getZ(b), z2 = Zfunc::getZ(c);
     z1[0] = m;
     long long ans1 = 0, ans2 = 0;
     for (int i = 0; i < m; i++)
         ans1 ^= (ll)(i + 1) * (ll)(z1[i] + 1);
     for (int i = m + 1; i < n + m + 1; i++)
         ans2 ^= (ll)(i - m) * (ll)(z2[i] + 1);
-    cout << ans1 << endl
-         << ans2 << endl;
+    cout << ans1 << endl << ans2 << endl;
 }
-int main()
-{
+int main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
     cout.tie(0);

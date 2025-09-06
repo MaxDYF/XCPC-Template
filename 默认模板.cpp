@@ -17,8 +17,7 @@ const double PI = acos(-1);
 
 int n, m, k, q;
 
-void work()
-{
+void work() {
     cin >> n;
 }
 int main()

@@ -1,24 +1,16 @@
-template <class T>
-struct SegmentTree
-{
-    struct Node
-    {
+template <class T> struct SegmentTree {
+    struct Node {
         T val, lazy;
         int l, r;
     };
     vector<Node> tr;
-    void update(int p)
-    {
-        tr[p].val = (tr[p << 1].val + tr[p << 1 | 1].val);
-    }
-    void build(int l, int r, vector<T> &a, int p = 1)
-    {
+    void update(int p) { tr[p].val = (tr[p << 1].val + tr[p << 1 | 1].val); }
+    void build(int l, int r, vector<T> &a, int p = 1) {
 
         tr[p].l = l;
         tr[p].r = r;
         tr[p].lazy = 0;
-        if (l == r)
-        {
+        if (l == r) {
             tr[p].val = a[l];
             return;
         }
@@ -28,22 +20,18 @@ struct SegmentTree
         update(p);
     }
     SegmentTree() {}
-    SegmentTree(int n)
-    {
+    SegmentTree(int n) {
         tr.resize(n * 4);
         vector<T> empty(n);
         build(0, n - 1, empty);
     }
-    SegmentTree(vector<T> &a)
-    {
+    SegmentTree(vector<T> &a) {
         int n = a.size();
         tr.resize(n * 4);
         build(0, n - 1, a);
     }
-    void pushdown(int p)
-    {
-        if (tr[p].lazy)
-        {
+    void pushdown(int p) {
+        if (tr[p].lazy) {
             T t = tr[p].lazy;
             tr[p << 1].val += t * (tr[p << 1].r - tr[p << 1].l + 1);
             tr[p << 1].lazy += t;
@@ -52,8 +40,7 @@ struct SegmentTree
             tr[p].lazy = 0;
         }
     }
-    T query(int l, int r, int p = 1)
-    {
+    T query(int l, int r, int p = 1) {
         if (l <= tr[p].l && tr[p].r <= r)
             return tr[p].val;
         int mid = (tr[p].l + tr[p].r) >> 1;
@@ -65,10 +52,8 @@ struct SegmentTree
             sum += query(l, r, p << 1 | 1);
         return sum;
     }
-    void add(int l, int r, int val, int p = 1)
-    {
-        if (l <= tr[p].l && tr[p].r <= r)
-        {
+    void add(int l, int r, int val, int p = 1) {
+        if (l <= tr[p].l && tr[p].r <= r) {
             tr[p].val += (tr[p].r - tr[p].l + 1) * val;
             tr[p].lazy += val;
             return;
@@ -82,17 +67,14 @@ struct SegmentTree
         update(p);
     }
 };
-template <class T>
-struct ChainPartition
-{
+template <class T> struct ChainPartition {
     vector<vector<int>> son;
     vector<int> dep, top, siz, hson, lnk2seg, lnk2tree, f;
     vector<T> segval, treeval;
     int dfnCount;
     SegmentTree<T> tr;
     ChainPartition() {}
-    ChainPartition(int n)
-    {
+    ChainPartition(int n) {
         dfnCount = 0;
         segval.resize(n);
         f.resize(n);
@@ -105,8 +87,7 @@ struct ChainPartition
         son.resize(n);
         tr = SegmentTree<T>(n);
     }
-    ChainPartition(vector<T> a)
-    {
+    ChainPartition(vector<T> a) {
         int n = a.size();
         dfnCount = 0;
         segval.resize(n);
@@ -120,19 +101,16 @@ struct ChainPartition
         son.resize(n);
         treeval = a;
     }
-    void addEdge(int x, int y)
-    {
+    void addEdge(int x, int y) {
         son[x].push_back(y);
         son[y].push_back(x);
     }
-    void dfs1(int x, int fa, int depth = 1)
-    {
+    void dfs1(int x, int fa, int depth = 1) {
         dep[x] = depth;
         siz[x] = 1;
         hson[x] = -1;
         f[x] = fa;
-        for (int y : son[x])
-        {
+        for (int y : son[x]) {
             if (y == fa)
                 continue;
             dfs1(y, x, depth + 1);
@@ -141,8 +119,7 @@ struct ChainPartition
                 hson[x] = y;
         }
     }
-    void dfs2(int x, int nowtop)
-    {
+    void dfs2(int x, int nowtop) {
         top[x] = nowtop;
         lnk2seg[x] = dfnCount++;
         lnk2tree[lnk2seg[x]] = x;
@@ -150,31 +127,21 @@ struct ChainPartition
         if (hson[x] == -1)
             return;
         dfs2(hson[x], nowtop);
-        for (int y : son[x])
-        {
+        for (int y : son[x]) {
             if (y == f[x] || y == hson[x])
                 continue;
             dfs2(y, y);
         }
     }
-    void init(int root = 0)
-    {
+    void init(int root = 0) {
         dfs1(root, -1);
         dfs2(root, root);
         tr = SegmentTree(segval);
     }
-    T querySubtree(int x)
-    {
-        return tr.query(lnk2seg[x], lnk2seg[x] + siz[x] - 1);
-    }
-    void addSubtree(int x, T val)
-    {
-        tr.add(lnk2seg[x], lnk2seg[x] + siz[x] - 1, val);
-    }
-    int getLCA(int x, int y)
-    {
-        while (top[x] != top[y])
-        {
+    T querySubtree(int x) { return tr.query(lnk2seg[x], lnk2seg[x] + siz[x] - 1); }
+    void addSubtree(int x, T val) { tr.add(lnk2seg[x], lnk2seg[x] + siz[x] - 1, val); }
+    int getLCA(int x, int y) {
+        while (top[x] != top[y]) {
             if (dep[top[x]] < dep[top[y]])
                 swap(x, y);
             x = f[top[x]];
@@ -184,10 +151,8 @@ struct ChainPartition
         else
             return y;
     }
-    void add(int x, int y, T val)
-    {
-        while (top[x] != top[y])
-        {
+    void add(int x, int y, T val) {
+        while (top[x] != top[y]) {
             if (dep[top[x]] < dep[top[y]])
                 swap(x, y);
             tr.add(lnk2seg[top[x]], lnk2seg[x], val);
@@ -197,11 +162,9 @@ struct ChainPartition
             swap(x, y);
         tr.add(lnk2seg[x], lnk2seg[y], val);
     }
-    T query(int x, int y)
-    {
+    T query(int x, int y) {
         T ans = 0;
-        while (top[x] != top[y])
-        {
+        while (top[x] != top[y]) {
             if (dep[top[x]] < dep[top[y]])
                 swap(x, y);
             ans += tr.query(lnk2seg[top[x]], lnk2seg[x]);
